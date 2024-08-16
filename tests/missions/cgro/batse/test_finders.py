@@ -48,15 +48,15 @@ from gdt.missions.cgro.batse.finders import *
 download_dir = data_dir = os.path.dirname(os.path.abspath(__file__))
 
 
-class TestTriggerFtp(unittest.TestCase):
+class TestTriggerFinder(unittest.TestCase):
     
-    finder = BatseTriggerFtp(105)
+    finder = BatseTriggerFinder('00105')
     
     def test_cd(self):
         self.assertEqual(self.finder.num_files, 113)
-        self.finder.cd(5671)
+        self.finder.cd('05671')
         self.assertEqual(self.finder.num_files, 96)
-        self.finder.cd(105)
+        self.finder.cd('00105')
 
     def test_ls_cont(self):
         for file in self.finder.ls_cont():
@@ -303,7 +303,7 @@ class TestTriggerFtp(unittest.TestCase):
 
                 
 class TestContinuousFtp(unittest.TestCase):
-    finder = BatseContinuousFtp(Time('1992-01-01 12:00:00', format='iso'))
+    finder = BatseContinuousFinder(Time('1992-01-01 12:00:00', format='iso'))
     
     def test_cd(self):
         self.assertEqual(self.finder.num_files, 18)

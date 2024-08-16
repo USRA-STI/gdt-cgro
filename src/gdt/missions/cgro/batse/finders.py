@@ -39,12 +39,12 @@
 # the License.
 import os
 from math import floor
-from gdt.core.heasarc import FtpFinder
+from gdt.core.heasarc import BaseFinder
 from ..time import *
 
-__all__ = ['BatseTriggerFtp', 'BatseContinuousFtp']
+__all__ = ['BatseTriggerFinder', 'BatseContinuousFinder']
 
-class BatseFinder(FtpFinder):
+class BatseFinder(BaseFinder):
     """Subclassing FtpFinder to enable _file_filter() to take a list of
     BATSE detectors.
     """    
@@ -73,7 +73,7 @@ class BatseFinder(FtpFinder):
         return files
     
 
-class BatseTriggerFtp(BatseFinder):
+class BatseTriggerFinder(BatseFinder):
     """A class that interfaces with the HEASARC FTP trigger directories.
     An instance of this class will represent the available files associated
     with a single trigger.
@@ -552,7 +552,7 @@ class BatseTriggerFtp(BatseFinder):
         
         path = os.path.join(self._root, subdir)
         try:
-            trigger_dirs = self._ftp.nlst(path)
+            trigger_dirs = self._protocol.ls(path, fullpath=True)
         except:
             raise FileExistsError
         
@@ -568,7 +568,7 @@ class BatseTriggerFtp(BatseFinder):
         return the_path
 
 
-class BatseContinuousFtp(BatseFinder):
+class BatseContinuousFinder(BatseFinder):
     """A class that interfaces with the HEASARC FTP continuous daily data
     directories. An instance of this class will represent the available files 
     associated with a single day.
