@@ -554,7 +554,7 @@ class BatsePhaiiMulti(FitsFileContextManager, SpacecraftFrameModelMixin):
 
         ecalibs = [phaii.ecalib for phaii in phaiis]
         ecalib_sum = BatseEnergyCalib.combine_detectors(ecalibs)
-        e_edges = ecalib_sum.edges_over_timespan(0, self._tstart[0], 
+        e_edges = ecalib_sum.edges_over_timespan(det_var_list[0], self._tstart[0], 
                                                     self._tstop[-1])
         
         data = BatseTimeEnergyBins(counts, phaiis[0].data.tstart, 
