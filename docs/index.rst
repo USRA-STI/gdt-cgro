@@ -57,6 +57,7 @@ Getting Started
    :maxdepth: 1
 
    install
+   notebooks   
 
 ******************
 User Documentation
