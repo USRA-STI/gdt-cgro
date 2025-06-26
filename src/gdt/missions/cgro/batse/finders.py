@@ -169,7 +169,7 @@ class BatseTriggerFinder(BatseFinder):
         The valid data types, to be passed via `drm_type` are:
         
           'cont', 'discsc', 'discsp', 'dsherb', 'her', 'herb', 'mer', 'sher',
-          'sherb', 'stte', 'tte'
+          'sherb', 'stte', 'tte_list'
         
         Args:
             download_dir (str): The download directory
@@ -185,7 +185,7 @@ class BatseTriggerFinder(BatseFinder):
             (list): The filenames of the downloaded files
         """
         _types = ['cont', 'discsc', 'discsp', 'dsherb', 'her', 'herb', 'mer',
-                  'sher', 'sherb', 'stte_list', 'tte']
+                  'sher', 'sherb', 'stte', 'tte_list']
         
         if drm_type =='all':
             files = self._file_filter(self.files, '_drm', 'fits.gz', dets=dets)
@@ -206,6 +206,8 @@ class BatseTriggerFinder(BatseFinder):
                     f = [i for i in f if i.startswith('h')]
                 elif drm_type == 'sherb':
                     f = [i for i in f if i.startswith('s')]
+                elif drm_type == 'tte_list':
+                    f = [i for i in f if i.startswith('t')]				    
                 else:
                     pass
                 
@@ -393,7 +395,8 @@ class BatseTriggerFinder(BatseFinder):
         Returns:
             (list): The filenames of the downloaded files
         """
-        files = self._file_filter(self.files, 'tte_bfits', 'fits.gz')
+        files = self._file_filter(self.files, 'tte_list', 'fits.gz')
+        files = [f for f in files if not f.startswith('s') and 'drm' not in f]
         return self.get(download_dir, files, **kwargs)
 
     def get_tts(self, download_dir, dets=None, **kwargs):
@@ -525,7 +528,8 @@ class BatseTriggerFinder(BatseFinder):
         Returns:
             (list of str)
         """
-        return self._file_filter(self.files, 'tte_bfits', 'fits.gz')
+        files = self._file_filter(self.files, 'tte_list', 'fits.gz')
+        return [f for f in files if not f.startswith('s') and 'drm' not in f]
 
     def ls_tts(self):
         """List the time-to-spill data for the trigger. 
@@ -544,27 +548,57 @@ class BatseTriggerFinder(BatseFinder):
         Returns:
             str: The path of the FTP directory for the trigger
         """
+#        from pathlib import Path
+
         # BATSE trigger numbers are separated into directories spanning 200
         # trigger numbers with 5 digit padding (e.g. 00001_00200; 00201_00400)
         beg = ( floor(float(str_trigger_num)/200.0) * 200 ) + 1
         end = beg + 199
         subdir = '{0:05d}_{1:05d}'.format(beg, end)
+	
+        if (self.protocol == 'AWS'): 
+		
+            trigsubdirs = [str_trigger_num + '_burst', str_trigger_num + '_tgf', str_trigger_num +'_flare', str_trigger_num+'_sgr', str_trigger_num + '_particles', str_trigger_num + '_groj1744-28', str_trigger_num + '_cygx1']
+
+            int_trig_num = int(str_trigger_num)
+            if int_trig_num < 1000:
+                file_trig_str = str_trigger_num[2:5]
+            elif int_trig_num >= 1000 and int_trig_num < 10000:
+                file_trig_str = str_trigger_num[1:5]
+            elif int_trig_num >= 10000:
+                file_trig_str = str_trigger_num
+            else: 
+                print ('Invalid trigger number', str_trigger_num)
+
+            the_path = ' '
+
+            for trigsubdir in trigsubdirs:
+                test_path = os.path.join(self._root, subdir, trigsubdir)
+                test_file = os.path.join(test_path, file_trig_str+'_4ch.gif')
+                trigger_files = self._protocol.ls(test_file, fullpath=True)
+                if len(trigger_files) >0:
+                    the_path = test_path
+                    break		
+                else:
+                    pass
+
+        else: 
+
+            path = os.path.join(self._root, subdir)
+            try:
+                trigger_dirs = self._protocol.ls(path, fullpath=True)
+            except:
+                raise FileExistsError
         
-        path = os.path.join(self._root, subdir)
-        try:
-            trigger_dirs = self._protocol.ls(path, fullpath=True)
-        except:
-            raise FileExistsError
-        
-        the_path = ''
-        for trigger_dir in trigger_dirs:
-            if os.path.basename(trigger_dir).startswith(str_trigger_num):
-                the_path = trigger_dir
-                break
-        
+            the_path = ''
+            for trigger_dir in trigger_dirs:
+                if os.path.basename(trigger_dir).startswith(str_trigger_num):
+                    the_path = trigger_dir
+                    break
+
         if the_path == '':
             raise FileExistsError
-                
+	                  		                   
         return the_path
 
 
