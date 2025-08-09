@@ -82,6 +82,7 @@ Instrument Definitions
 
    missions/cgro/batse/detectors
    missions/cgro/batse/headers
+   missions/cgro/batse/localization
 
 Data Types
 ----------

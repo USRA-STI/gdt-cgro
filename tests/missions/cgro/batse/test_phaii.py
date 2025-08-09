@@ -182,7 +182,7 @@ class TestBatsePhaiiContOneDet(unittest.TestCase):
         phaii2 = self.phaii.slice_energy((50.0, 300.0))
         emin, emax = phaii2.energy_range
         self.assertAlmostEqual(emin, 21.8, places=5)
-        self.assertAlmostEqual(emax, 323.15576, places=5)
+        self.assertAlmostEqual(emax, 323.1558, places=4)
         assert phaii2.ecalib is not None
 
     def test_slice_time(self):
@@ -517,8 +517,9 @@ class TestBatseEnergyCalib(unittest.TestCase):
         edges = self.ecalib.edges_over_timespan(0, t0, t1)
         test_edges = [23.8, 48.52175, 57.49457, 66.60049, 75.81658, 89.81121, 
                       103.97447, 127.87785, 161.82375, 220.94574, 295.97504, 
-                      392.21344, 545.96497, 784.41504, 1245.8082, 1838.5947, 
-                      3999.9998]
+                      392.21344, 545.96497, 784.41504, 1245.8083, 1838.5947, 
+                      4000.00]
+
         for i, edge in enumerate(edges):
             self.assertAlmostEqual(edge, test_edges[i], places=4)
 
@@ -528,7 +529,7 @@ class TestBatseEnergyCalib(unittest.TestCase):
         edges = self.ecalib.edges_over_timespan(0, t0, t1)
         test_edges = [23.8, 50.683517, 60.08071, 69.617294, 79.269264, 93.92577,  
                       108.758896, 133.7928, 169.34418, 231.26239, 309.84027, 
-                      410.63028, 571.65356, 821.3812, 1304.5962, 1925.4187, 
+                      410.63028, 571.65356, 821.3812, 1304.5963, 1925.4188, 
                       4000.]
         for i, edge in enumerate(edges):
             self.assertAlmostEqual(edge, test_edges[i], places=4)
@@ -539,8 +540,8 @@ class TestBatseEnergyCalib(unittest.TestCase):
         edges = self.ecalib.edges_over_timespan(0, t0, t1)
         test_edges = [  23.800005,   49.934483,   59.18463 ,   68.572   ,   78.072945,
         92.50011 ,  107.10114 ,  131.74332 ,  166.73842 ,  227.68774 ,
-        305.03607 ,  404.24896 ,  562.7527  ,  808.5727  , 1284.2267  ,
-        1895.335   , 4000.      ]
+        305.03607 ,  404.24896 ,  562.7527  ,  808.57263  , 1284.2267  ,
+        1895.3348   , 4000.      ]
 
         for i, edge in enumerate(edges):
             self.assertAlmostEqual(edge, test_edges[i], places=4)

@@ -67,8 +67,9 @@ def from_day_time(yyyy_ddd, day_secs):
     Returns:
         (astropy.time.Time)
     """
+    float_day_secs = float(day_secs)
     dt = datetime.datetime.strptime(str(yyyy_ddd), '%Y.%j')
-    dt += datetime.timedelta(seconds=day_secs)
+    dt += datetime.timedelta(seconds=float_day_secs)
     return Time(dt)
 
 
