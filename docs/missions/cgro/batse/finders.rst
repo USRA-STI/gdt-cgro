@@ -1,5 +1,5 @@
 .. _batse-finders:
-.. |BatseTriggerFtp| replace:: :class:`~gdt.missions.cgro.batse.finders.BatseTriggerFtp`
+.. |BatseTriggerFinder| replace:: :class:`~gdt.missions.cgro.batse.finders.BatseTriggerFinder`
 .. |BatseContinuousFtp| replace:: :class:`~gdt.missions.cgro.batse.finders.BatseContinuousFtp`
 
 **************************************************************
@@ -19,9 +19,9 @@ Finding Triggered BATSE Data
 Let's start with trigger data, and assume you know the trigger number you're 
 interested in (6526):
 
-    >>> from gdt.missions.cgro.batse.finders import BatseTriggerFtp
-    >>> trig_finder = BatseTriggerFtp(6526)
-    <BatseTriggerFtp: 06526>
+    >>> from gdt.missions.cgro.batse.finders import BatseTriggerFinder
+    >>> trig_finder = BatseTriggerFinder('06526', protocol='FTP')
+    <BatseTriggerFinder: 06526>
     >>> trig_finder.num_files
     131
 
@@ -42,11 +42,11 @@ Great, there is CONT data available for four detectors. How about TTE data?
     ['tte_bfits_6526.fits.gz']
 
 What if we want to move on to another trigger? You don't have to create a new 
-|BatseTriggerFTP| object, you can just used ``cd()``:
+|BatseTriggerFinder| object, you can just used ``cd()``:
 
-    >>> trig_finder.cd(105)
+    >>> trig_finder.cd('00105')
     >>> trig_finder
-    <BatseTriggerFtp: 00105>
+    <BatseTriggerFinder: 00105>
     >>> trig_finder.num_files
     113
 
@@ -62,15 +62,15 @@ Finding Continuous BATSE Data
 Now we want some continuous data. There aren't any trigger numbers for 
 continuous data. Continuous (CONT) and LAD discriminator (DISCLA) data are 
 available in files that cover a whole day (relative to UTC). To find data, 
-you need to create a |BatseContinuousFtp| object by specifying a time using Astropy 
+you need to create a |BatseContinuousFinder| object by specifying a time using Astropy 
 Time:
 
-    >>> from gdt.missions.cgro.batse.finders import BatseContinuousFtp
+    >>> from gdt.missions.cgro.batse.finders import BatseContinuousFinder
     >>> from gdt.missions.cgro.time import Time
     >>> time = Time('1995-09-23 12:00:00', scale='utc', format='iso')
-    >>> cont_finder = BatseContinuousFtp(time)
+    >>> cont_finder = BatseContinuousFinder(time, protocol='FTP')
     >>> cont_finder
-    <BatseContinuousFtp: 1995-09-23 12:00:00.000>
+    <BatseContinuousFinder: 1995-09-23 12:00:00.000>
     >>> cont_finder.num_files
     18
 
@@ -88,7 +88,7 @@ different times:
     >>> new_time = Time('1999-01-01 00:00:01', scale='utc', format='iso')
     >>> cont_finder.cd(new_time)
     >>> cont_finder
-    <BatseContinuousFtp: 1999-01-01 00:00:01.000>
+    <BatseContinuousFinder: 1999-01-01 00:00:01.000>
 
 Now how about downloading the position history file for this time:
 
@@ -96,7 +96,7 @@ Now how about downloading the position history file for this time:
     cont_11179.fits.gz ━━━━━━━━━━━━━━━━━━━ 100.0% • 8.0/8.0 MB • 3.6 MB/s • 0:00:00
 
 
-See :external:ref:`The FtpFinder Class<core-heasarc-finder>` for more details 
+See :external:ref:`The BaseFinder Class<core-heasarc-finder>` for more details 
 on using data finders.
 
 Reference/API
