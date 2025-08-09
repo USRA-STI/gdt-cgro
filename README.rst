@@ -4,6 +4,8 @@ GDT-CGRO
 
 The GDT-CGRO is an extension to Gamma-ray Data Tools that adds functions specific to the CGRO mission.
 
+The full documentation can be found `here <https://astro-gdt-cgro.readthedocs.io/en/latest/>`_.
+
 Normal Installation
 -------------------
 
