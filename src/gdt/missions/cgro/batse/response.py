@@ -118,16 +118,16 @@ class BatseRsp(Rsp):
             matrix = drm_data['DRM_SUM'][index]
         
         n_zeros = drm_data['N_ZEROS'][index]
-        num_ebins = drm_data['NUMEBINS'][index]
-        num_chans = drm_data['NUMCHAN'][index]
-        num_zeros = drm_data['NUMZERO'][index]
+        num_ebins = int(drm_data['NUMEBINS'][index])
+        num_chans = int(drm_data['NUMCHAN'][index])
+        num_zeros = int(drm_data['NUMZERO'][index])
         
         sidx = 0
         drm = np.zeros((num_ebins-1, num_zeros))
         for ichan in range(num_zeros):
-            eidx = sidx + (num_ebins-n_zeros[ichan])
+            eidx = int(sidx) + (num_ebins - int(n_zeros[ichan]))
             drm[n_zeros[ichan]-1:,ichan] = matrix[sidx:eidx]
-            sidx = eidx
+            sidx = int(eidx)
 
         chan_edges = drm_data['E_EDGES'][index]
         phot_edges = drm_data['PHT_EDGE'][index]
